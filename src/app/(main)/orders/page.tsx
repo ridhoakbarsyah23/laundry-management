@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
 import { getOrders } from './actions'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -23,8 +23,28 @@ import {
   Banknote, 
   Activity, 
   CreditCard,
-  Inbox
+  Inbox,
+  Printer,
+  MessageCircle
 } from 'lucide-react'
+
+function getWhatsAppLink(order: any) {
+  if (!order.customer_phone) return null
+  let phone = order.customer_phone.replace(/\D/g, '')
+  if (phone.startsWith('0')) {
+    phone = '62' + phone.substring(1)
+  }
+  const formatCurrency = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(order.total)
+  
+  const msg = `Halo ${order.customer_name || 'Kak'},\n\nTerima kasih telah mempercayakan cucian Anda di *LaundryHub*! 💧\n\nBerikut adalah rincian pesanan Anda:\n*Nomor Order:* ${order.order_number}\n*Total Tagihan:* ${formatCurrency}\n\nPesanan Anda sedang kami proses. Silakan simpan pesan ini sebagai bukti digital ya.\n\nTerima kasih! 🙏`
+  
+  return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+}
 
 export default async function OrdersPage() {
   const orders = await getOrders()
@@ -71,6 +91,7 @@ export default async function OrdersPage() {
               <TableHead className="text-blue-800 font-semibold h-12 text-right pr-6">
                 <div className="flex items-center justify-end gap-1.5"><CreditCard className="w-4 h-4" /> Payment</div>
               </TableHead>
+              <TableHead className="w-[100px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -96,6 +117,33 @@ export default async function OrdersPage() {
                   }`}>
                     {o.payment_status === 'paid' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
                     {o.payment_status === 'paid' ? 'Paid' : 'Unpaid'}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right py-4 pr-6">
+                  <div className="flex items-center justify-end gap-1">
+                    {(() => {
+                      const waLink = getWhatsAppLink(o);
+                      return waLink ? (
+                        <Link 
+                          href={waLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          title="Kirim Struk via WhatsApp"
+                          className={`${buttonVariants({ variant: 'ghost', size: 'icon' })} h-8 w-8 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors rounded-lg`}
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </Link>
+                      ) : null;
+                    })()}
+                    <Link 
+                      href={`/receipt/${o.id}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      title="Cetak Struk"
+                      className={`${buttonVariants({ variant: 'ghost', size: 'icon' })} h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-colors rounded-lg`}
+                    >
+                      <Printer className="w-4 h-4" />
+                    </Link>
                   </div>
                 </TableCell>
               </TableRow>
