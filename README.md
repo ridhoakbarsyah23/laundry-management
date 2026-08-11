@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💧 LaundryHub
 
-## Getting Started
+LaundryHub is a modern, full-stack POS (Point of Sale) and management dashboard designed specifically for laundry businesses. Built with a premium, glassmorphism UI, it streamlines day-to-day operations from order creation to revenue tracking.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **📊 Smart Dashboard:** Real-time overview of today's transactions, revenue, and active laundry status (washing, ready for pickup).
+- **🛍️ Point of Sale (POS):** Fast and intuitive order creation with inline new customer registration and dynamic service selection.
+- **👥 Customer Management:** Easily track and manage your customer database.
+- **🏷️ Service Configuration:** Manage your laundry services, pricing, and units (e.g., kg, pcs).
+- **💸 Expense Tracking:** Keep track of operational costs to maintain a healthy cash flow.
+- **🔒 Secure Authentication:** Protected routes and secure login powered by Supabase Auth.
+- **🎨 Premium UI/UX:** Built with Tailwind CSS and Shadcn UI, featuring modern glassmorphism, fluid animations, and beautiful gradients.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** [Next.js 14](https://nextjs.org/) (App Router, Server Actions)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) & [Shadcn UI](https://ui.shadcn.com/)
+- **Database:** PostgreSQL (Hosted on [Supabase](https://supabase.com/))
+- **ORM:** [Drizzle ORM](https://orm.drizzle.team/)
+- **Icons:** [Lucide React](https://lucide.dev/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
+- Node.js 18+
+- A Supabase account with a PostgreSQL database
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ridhoakbarsyah23/laundry-management.git
+   cd laundry-management
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. Set up your environment variables by creating a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   DATABASE_URL=your_database_connection_string
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Push the database schema using Drizzle:
+   ```bash
+   npx drizzle-kit push
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
