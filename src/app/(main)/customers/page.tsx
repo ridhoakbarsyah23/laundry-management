@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { getCustomers } from './actions'
 import { CustomerForm } from './CustomerForm'
+import { CustomerActions } from './CustomerActions'
 import {
   Table,
   TableBody,
@@ -18,8 +19,8 @@ export default async function CustomersPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Customers</h1>
-          <p className="text-slate-500 mt-2 text-lg">Manage your laundry customers.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Pelanggan</h1>
+          <p className="text-slate-500 mt-2 text-lg">Kelola data pelanggan laundry Anda.</p>
         </div>
         <CustomerForm />
       </div>
@@ -28,10 +29,11 @@ export default async function CustomersPage() {
         <Table>
           <TableHeader className="bg-slate-50/50">
             <TableRow className="hover:bg-transparent border-b-slate-200/60">
-              <TableHead className="text-slate-600 font-semibold">Name</TableHead>
-              <TableHead className="text-slate-600 font-semibold">Phone</TableHead>
-              <TableHead className="text-slate-600 font-semibold">Address</TableHead>
-              <TableHead className="text-slate-600 font-semibold">Joined At</TableHead>
+              <TableHead className="text-slate-600 font-semibold">Nama</TableHead>
+              <TableHead className="text-slate-600 font-semibold">Nomor HP</TableHead>
+              <TableHead className="text-slate-600 font-semibold">Alamat</TableHead>
+              <TableHead className="text-slate-600 font-semibold">Terdaftar pada</TableHead>
+              <TableHead className="text-right text-slate-600 font-semibold">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -41,12 +43,15 @@ export default async function CustomersPage() {
                 <TableCell>{c.phone}</TableCell>
                 <TableCell>{c.address || '-'}</TableCell>
                 <TableCell>{new Date(c.created_at).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <CustomerActions customer={c} />
+                </TableCell>
               </TableRow>
             ))}
             {customers.length === 0 && (
               <TableRow>
                 <TableCell colSpan={4} className="text-center h-24 text-muted-foreground">
-                  No customers found.
+                  Belum ada pelanggan.
                 </TableCell>
               </TableRow>
             )}

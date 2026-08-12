@@ -4,10 +4,10 @@ import { CheckCircle2, CircleDollarSign, Loader2, TrendingUp } from 'lucide-reac
 import { db } from '@/db'
 import { orders } from '@/db/schema'
 import { eq, gte, and, inArray } from 'drizzle-orm'
+import { requireOwner } from '@/lib/auth'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { authUser: user } = await requireOwner()
 
   // Calculate "Today" boundary
   const startOfToday = new Date()
@@ -41,9 +41,9 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Dashboard</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Dasbor</h1>
         <p className="text-slate-500 mt-2 text-lg">
-          Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}! Here's an overview of your laundry business today.
+          Selamat datang kembali{user?.email ? `, ${user.email.split('@')[0]}` : ''}! Berikut adalah ringkasan bisnis laundry Anda hari ini.
         </p>
       </div>
 
@@ -51,21 +51,21 @@ export default async function DashboardPage() {
         {/* Card 1 */}
         <Card className="border-0 shadow-lg shadow-blue-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-600">Total Transactions</CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-600">Total Transaksi</CardTitle>
             <div className="p-2 bg-blue-100/50 rounded-lg">
               <TrendingUp className="w-4 h-4 text-blue-600" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-800">{totalTransactions}</div>
-            <p className="text-xs text-slate-500 mt-1 font-medium">Today's orders</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Pesanan hari ini</p>
           </CardContent>
         </Card>
 
         {/* Card 2 */}
         <Card className="border-0 shadow-lg shadow-emerald-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-600">Revenue</CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-600">Pendapatan</CardTitle>
             <div className="p-2 bg-emerald-100/50 rounded-lg">
               <CircleDollarSign className="w-4 h-4 text-emerald-600" />
             </div>
@@ -78,35 +78,35 @@ export default async function DashboardPage() {
                 maximumFractionDigits: 0
               }).format(revenueToday)}
             </div>
-            <p className="text-xs text-slate-500 mt-1 font-medium">Today's earnings</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Pemasukan hari ini</p>
           </CardContent>
         </Card>
 
         {/* Card 3 */}
         <Card className="border-0 shadow-lg shadow-amber-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-600">In Process</CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-600">Sedang Diproses</CardTitle>
             <div className="p-2 bg-amber-100/50 rounded-lg">
               <Loader2 className="w-4 h-4 text-amber-600 animate-spin-slow" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-800">{inProcessCount}</div>
-            <p className="text-xs text-slate-500 mt-1 font-medium">Currently washing</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Sedang dikerjakan</p>
           </CardContent>
         </Card>
 
         {/* Card 4 */}
         <Card className="border-0 shadow-lg shadow-purple-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-600">Ready for Pickup</CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-600">Siap Diambil</CardTitle>
             <div className="p-2 bg-purple-100/50 rounded-lg">
               <CheckCircle2 className="w-4 h-4 text-purple-600" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-800">{readyCount}</div>
-            <p className="text-xs text-slate-500 mt-1 font-medium">Awaiting customer</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Menunggu pelanggan</p>
           </CardContent>
         </Card>
       </div>

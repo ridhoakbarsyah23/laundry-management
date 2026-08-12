@@ -28,6 +28,25 @@ export async function createCustomer(formData: FormData) {
   return { success: true }
 }
 
+export async function updateCustomer(id: string, formData: FormData) {
+  const name = formData.get('name') as string
+  const phone = formData.get('phone') as string
+  const address = formData.get('address') as string
+
+  if (!name || !phone) {
+    return { error: 'Name and phone are required' }
+  }
+
+  await db.update(customers).set({
+    name,
+    phone,
+    address,
+  }).where(eq(customers.id, id))
+
+  revalidatePath('/customers')
+  return { success: true }
+}
+
 export async function deleteCustomer(id: string) {
   await db.delete(customers).where(eq(customers.id, id))
   revalidatePath('/customers')

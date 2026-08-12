@@ -21,29 +21,29 @@ export function ExpenseForm() {
   return (
     <form action={action} className="space-y-4 max-w-sm">
       <div className="space-y-2">
-        <Label htmlFor="category">Category</Label>
+        <Label htmlFor="category">Kategori</Label>
         <Input
           id="category"
           name="category"
-          placeholder="e.g. Listrik, Sabun, Gaji"
+          placeholder="misal: Listrik, Sabun, Gaji"
           required
           disabled={loading}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="amount">Amount (IDR)</Label>
+        <Label htmlFor="amount">Jumlah (Rp)</Label>
         <Input
           id="amount"
           name="amount"
           type="number"
           min="1"
-          placeholder="e.g. 50000"
+          placeholder="misal: 50000"
           required
           disabled={loading}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="description">Description (Optional)</Label>
+        <Label htmlFor="description">Keterangan (Opsional)</Label>
         <Input
           id="description"
           name="description"
@@ -52,7 +52,7 @@ export function ExpenseForm() {
         />
       </div>
       <Button type="submit" disabled={loading}>
-        {loading ? 'Adding...' : 'Add Expense'}
+        {loading ? 'Menyimpan...' : 'Simpan Pengeluaran'}
       </Button>
     </form>
   )

@@ -44,3 +44,27 @@ export async function createExpense(formData: FormData) {
 
   revalidatePath('/expenses')
 }
+export async function updateExpense(id: string, formData: FormData) {
+  const category = formData.get('category') as string
+  const amount = parseInt(formData.get('amount') as string, 10)
+  const description = formData.get('description') as string
+
+  if (!category || isNaN(amount)) {
+    return { error: 'Category and valid amount are required' }
+  }
+
+  await db.update(expenses).set({
+    category,
+    amount,
+    description: description || null,
+  }).where(eq(expenses.id, id))
+
+  revalidatePath('/expenses')
+  return { success: true }
+}
+
+export async function deleteExpense(id: string) {
+  await db.delete(expenses).where(eq(expenses.id, id))
+  revalidatePath('/expenses')
+  return { success: true }
+}

@@ -24,27 +24,27 @@ export function CustomerForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-        Add New Customer
+        Tambah Pelanggan
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Customer</DialogTitle>
+          <DialogTitle>Tambah Pelanggan Baru</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" required placeholder="e.g. Budi" />
+            <Label htmlFor="name">Nama Lengkap</Label>
+            <Input id="name" name="name" required placeholder="misal: Budi" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input id="phone" name="phone" required placeholder="e.g. 08123456789" />
+            <Label htmlFor="phone">Nomor HP</Label>
+            <Input id="phone" name="phone" required placeholder="misal: 08123456789" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input id="address" name="address" placeholder="Optional" />
+            <Label htmlFor="address">Alamat</Label>
+            <Input id="address" name="address" placeholder="Opsional" />
           </div>
           <Button type="submit" className="w-full">
-            Save Customer
+            Simpan Pelanggan
           </Button>
         </form>
       </DialogContent>

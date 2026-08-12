@@ -40,6 +40,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         customerName={order.customer?.name}
         orderNumber={order.order_number}
         total={order.total}
+        discount={order.discount}
       />
 
       {/* Receipt Paper */}
@@ -57,20 +58,20 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         {/* Order Info */}
         <div className="text-xs space-y-1 mb-4">
           <div className="flex justify-between">
-            <span>Date:</span>
+            <span>Tanggal:</span>
             <span>{formatDate(new Date(order.created_at))}</span>
           </div>
           <div className="flex justify-between">
-            <span>Order:</span>
+            <span>No. Pesanan:</span>
             <span className="font-bold">{order.order_number}</span>
           </div>
           <div className="flex justify-between">
-            <span>Customer:</span>
-            <span className="font-bold">{order.customer?.name || 'Unknown'}</span>
+            <span>Pelanggan:</span>
+            <span className="font-bold">{order.customer?.name || 'Tidak diketahui'}</span>
           </div>
           {order.customer?.phone && (
             <div className="flex justify-between">
-              <span>Phone:</span>
+              <span>No. HP:</span>
               <span>{order.customer.phone}</span>
             </div>
           )}
@@ -100,16 +101,26 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         {/* Totals */}
         <div className="text-xs space-y-2 mb-6">
           <div className="flex justify-between font-bold text-sm">
+            <span>SUBTOTAL</span>
+            <span>{formatCurrency(order.subtotal)}</span>
+          </div>
+          {order.discount > 0 && (
+            <div className="flex justify-between text-slate-500">
+              <span>DISKON</span>
+              <span>-{formatCurrency(order.discount)}</span>
+            </div>
+          )}
+          <div className="flex justify-between font-bold text-sm pt-1 border-t border-slate-200">
             <span>TOTAL</span>
             <span>{formatCurrency(order.total)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Payment Status:</span>
+            <span>Status Bayar:</span>
             <span className="uppercase">{order.payment_status}</span>
           </div>
           {order.payment_method && (
             <div className="flex justify-between">
-              <span>Payment Method:</span>
+              <span>Metode Bayar:</span>
               <span className="uppercase">{order.payment_method}</span>
             </div>
           )}
@@ -118,7 +129,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         {/* Notes */}
         {order.notes && (
           <div className="text-xs mb-6 p-2 bg-slate-50 border border-slate-200 rounded print:border-none print:p-0 print:bg-transparent">
-            <strong>Notes:</strong> {order.notes}
+            <strong>Catatan:</strong> {order.notes}
           </div>
         )}
 

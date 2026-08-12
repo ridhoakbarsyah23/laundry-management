@@ -8,9 +8,10 @@ interface ReceiptActionsProps {
   customerName?: string
   orderNumber: string
   total: number
+  discount?: number
 }
 
-export default function ReceiptActions({ phone, customerName, orderNumber, total }: ReceiptActionsProps) {
+export default function ReceiptActions({ phone, customerName, orderNumber, total, discount = 0 }: ReceiptActionsProps) {
   useEffect(() => {
     // Automatically trigger print dialog when component mounts
     setTimeout(() => {
@@ -37,7 +38,16 @@ export default function ReceiptActions({ phone, customerName, orderNumber, total
       maximumFractionDigits: 0,
     }).format(total)
 
-    const message = `Halo ${customerName || 'Kak'},\n\nTerima kasih telah mempercayakan cucian Anda di *LaundryHub*! 💧\n\nBerikut adalah rincian pesanan Anda:\n*Nomor Order:* ${orderNumber}\n*Total Tagihan:* ${formatCurrency}\n\nPesanan Anda sedang kami proses. Silakan simpan pesan ini sebagai bukti digital ya.\n\nTerima kasih! 🙏`
+    const formattedDiscount = discount > 0 ? new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(discount) : ''
+
+    const discountText = discount > 0 ? `\n*Diskon:* -${formattedDiscount}` : ''
+
+    const message = `Halo ${customerName || 'Kak'},\n\nTerima kasih telah mempercayakan cucian Anda di *LaundryHub*! 💧\n\nBerikut adalah rincian pesanan Anda:\n*Nomor Order:* ${orderNumber}${discountText}\n*Total Tagihan:* ${formatCurrency}\n\nPesanan Anda sedang kami proses. Silakan simpan pesan ini sebagai bukti digital ya.\n\nTerima kasih! 🙏`
     
     const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank')
@@ -57,7 +67,7 @@ export default function ReceiptActions({ phone, customerName, orderNumber, total
       <button 
         onClick={() => window.print()}
         className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-xl shadow-blue-600/30 transition-transform hover:scale-110 flex items-center justify-center group"
-        title="Print Receipt"
+        title="Cetak Struk"
       >
         <Printer className="w-6 h-6" />
       </button>

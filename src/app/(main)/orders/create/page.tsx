@@ -18,7 +18,7 @@ export default async function CreateOrderPage() {
         <Link href="/orders">
           <Button variant="ghost" className="w-fit text-slate-500 hover:text-blue-600 hover:bg-blue-50 pl-2">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Orders
+            Kembali ke Pesanan
           </Button>
         </Link>
         <div className="flex items-center gap-3">
@@ -26,8 +26,8 @@ export default async function CreateOrderPage() {
             <ShoppingBag className="w-8 h-8 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Point of Sale</h1>
-            <p className="text-slate-500 mt-1 text-lg">Create a new laundry transaction.</p>
+            <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Kasir (Point of Sale)</h1>
+            <p className="text-slate-500 mt-1 text-lg">Buat transaksi cucian baru.</p>
           </div>
         </div>
       </div>

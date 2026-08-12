@@ -45,6 +45,7 @@ export async function getOrderById(orderId: string) {
       quantity: orderItems.quantity,
       price: orderItems.price,
       subtotal: orderItems.subtotal,
+      service_id: orderItems.service_id,
       service_name: services.name,
       service_unit: services.unit,
     })
@@ -80,6 +81,7 @@ export async function createOrder(data: {
   quantity: number
   notes: string
   payment_method?: string // if provided, it's paid
+  discount?: number // added discount
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -95,7 +97,8 @@ export async function createOrder(data: {
   if (!service) throw new Error('Service not found')
 
   const subtotal = service.price * data.quantity
-  const total = subtotal // MVP: no discount logic yet
+  const discount = data.discount || 0
+  const total = Math.max(0, subtotal - discount)
   
   // Generate order number: ORD-DDMMYY-XXX
   const now = new Date()
@@ -134,6 +137,7 @@ export async function createOrder(data: {
       order_number,
       customer_id: customerId,
       subtotal,
+      discount,
       total,
       notes: data.notes,
       payment_status: data.payment_method ? 'paid' : 'unpaid',
@@ -154,6 +158,97 @@ export async function createOrder(data: {
     if (data.payment_method) {
       await tx.insert(payments).values({
         order_id: newOrder.id,
+        amount: total,
+        method: data.payment_method,
+        created_by: dbUser.id,
+      })
+    }
+  })
+
+  revalidatePath('/orders')
+  revalidatePath('/dashboard')
+  redirect('/orders')
+}
+export async function deleteOrder(orderId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  await db.transaction(async (tx) => {
+    // Delete payments first
+    await tx.delete(payments).where(eq(payments.order_id, orderId))
+    // Delete order items
+    await tx.delete(orderItems).where(eq(orderItems.order_id, orderId))
+    // Delete order
+    await tx.delete(orders).where(eq(orders.id, orderId))
+  })
+
+  revalidatePath('/orders')
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
+export async function updateOrder(orderId: string, data: {
+  customer_id?: string
+  new_customer_name?: string
+  new_customer_phone?: string
+  service_id: string
+  quantity: number
+  notes: string
+  payment_method?: string // if provided, it's paid
+  discount?: number // added discount
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) throw new Error('Unauthorized')
+
+  const [dbUser] = await db.select().from(users).where(eq(users.auth_id, user.id))
+  if (!dbUser) throw new Error('User not synced in database. Please log out and log in again.')
+
+  const [service] = await db.select().from(services).where(eq(services.id, data.service_id))
+  if (!service) throw new Error('Service not found')
+
+  const subtotal = service.price * data.quantity
+  const discount = data.discount || 0
+  const total = Math.max(0, subtotal - discount) 
+
+  await db.transaction(async (tx) => {
+    let customerId = data.customer_id
+    
+    if (!customerId && data.new_customer_name && data.new_customer_phone) {
+      const [newCustomer] = await tx.insert(customers).values({
+        name: data.new_customer_name,
+        phone: data.new_customer_phone,
+      }).returning()
+      customerId = newCustomer.id
+    }
+    
+    if (!customerId) throw new Error('Customer is required')
+
+    await tx.update(orders).set({
+      customer_id: customerId,
+      subtotal,
+      discount,
+      total,
+      notes: data.notes,
+      payment_status: data.payment_method ? 'paid' : 'unpaid',
+      payment_method: data.payment_method || null,
+    }).where(eq(orders.id, orderId))
+
+    await tx.delete(orderItems).where(eq(orderItems.order_id, orderId))
+    await tx.insert(orderItems).values({
+      order_id: orderId,
+      service_id: data.service_id,
+      quantity: data.quantity.toString(),
+      price: service.price,
+      subtotal,
+    })
+
+    await tx.delete(payments).where(eq(payments.order_id, orderId))
+    if (data.payment_method) {
+      await tx.insert(payments).values({
+        order_id: orderId,
         amount: total,
         method: data.payment_method,
         created_by: dbUser.id,
