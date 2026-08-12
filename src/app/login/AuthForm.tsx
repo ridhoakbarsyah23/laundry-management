@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react'
 import { login, signup } from './actions'
 import { createBrowserClient } from '@supabase/ssr'
+import Link from 'next/link'
 
 export function AuthForm({ error }: { error?: string }) {
   const [isLogin, setIsLogin] = useState(true)
@@ -79,7 +80,7 @@ export function AuthForm({ error }: { error?: string }) {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password" className="text-slate-600 font-medium">Password</Label>
-              {isLogin && <a href="#" className="text-xs font-medium text-slate-900 hover:underline">Forgot password?</a>}
+              {isLogin && <Link href="/forgot-password" className="text-xs font-medium text-slate-900 hover:underline">Lupa password?</Link>}
             </div>
             <div className="relative group">
               <Input 

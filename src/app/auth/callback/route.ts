@@ -30,7 +30,8 @@ export async function GET(request: Request) {
             role: 'staff',
           })
         }
-        return NextResponse.redirect(`${origin}/dashboard`)
+        const next = searchParams.get('next') || '/dashboard'
+        return NextResponse.redirect(`${origin}${next}`)
       } catch (dbError) {
         console.error('Database sync error:', dbError)
       }
