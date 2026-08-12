@@ -18,7 +18,7 @@ export default async function StaffPage() {
   const staffMembers = await getStaff()
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2.5 bg-blue-100 rounded-xl">

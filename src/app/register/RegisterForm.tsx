@@ -5,11 +5,11 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Eye, EyeOff } from 'lucide-react'
-import { login } from './actions'
+import { signup } from '@/app/login/actions'
 import { createBrowserClient } from '@supabase/ssr'
 import Link from 'next/link'
 
-export function AuthForm({ error, success }: { error?: string, success?: string }) {
+export function RegisterForm({ error }: { error?: string }) {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -29,12 +29,12 @@ export function AuthForm({ error, success }: { error?: string, success?: string 
   return (
     <div className="w-full max-w-[400px] mx-auto flex flex-col">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-900">Selamat Datang Kembali</h2>
-        <p className="text-slate-500 mt-2">Masukkan detail akun Anda untuk melanjutkan.</p>
+        <h2 className="text-3xl font-bold text-slate-900">Buat Akun Baru</h2>
+        <p className="text-slate-500 mt-2">Daftar sekarang dan kelola laundry dengan mudah.</p>
       </div>
 
       <div className="flex-1">
-        <form action={login} className="space-y-5" onSubmit={() => setLoading(true)}>
+        <form action={signup} className="space-y-5" onSubmit={() => setLoading(true)}>
           {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-slate-600 font-medium">Email address</Label>
@@ -50,16 +50,14 @@ export function AuthForm({ error, success }: { error?: string, success?: string 
 
           {/* Password */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-slate-600 font-medium">Password</Label>
-            </div>
+            <Label htmlFor="password" className="text-slate-600 font-medium">Password</Label>
             <div className="relative group z-10">
               <Input 
                 id="password" 
                 name="password" 
                 type={showPassword ? "text" : "password"} 
                 required 
-                placeholder="Enter your password"
+                placeholder="Buat password (min 6 karakter)"
                 className="h-11 rounded-lg border-slate-200 focus-visible:ring-slate-300 text-slate-800 placeholder:text-slate-400 pr-10"
               />
               <button 
@@ -70,29 +68,15 @@ export function AuthForm({ error, success }: { error?: string, success?: string 
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <div className="flex justify-end pt-1">
-              <a 
-                href="/forgot-password" 
-                className="text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
-              >
-                Lupa password?
-              </a>
-            </div>
           </div>
 
           {error && (
             <p className="text-sm font-medium text-rose-600 text-center bg-rose-50 p-3 rounded-lg">{error}</p>
           )}
 
-          {success && (
-            <p className="text-sm font-medium text-emerald-700 text-center bg-emerald-50 p-3 rounded-xl border border-emerald-100/50">
-              {success}
-            </p>
-          )}
-
           {/* Action Button */}
-          <Button type="submit" disabled={loading} className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all mt-4 text-base">
-            {loading ? 'Memproses...' : 'Masuk Sekarang'}
+          <Button type="submit" disabled={loading} className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-600/20 transition-all mt-4 text-base">
+            {loading ? 'Memproses...' : 'Daftar Sekarang'}
           </Button>
         </form>
 
@@ -124,8 +108,8 @@ export function AuthForm({ error, success }: { error?: string, success?: string 
           </Button>
         </div>
 
-        <div className="mt-8 text-center text-slate-500 font-medium relative z-50">
-          <p>Belum punya akun? <a href="/register" className="text-blue-600 font-semibold hover:underline cursor-pointer">Daftar di sini</a></p>
+        <div className="mt-8 text-center text-slate-500 font-medium">
+          <p>Sudah punya akun? <Link href="/login" className="text-indigo-600 font-semibold hover:underline">Masuk di sini</Link></p>
         </div>
       </div>
     </div>

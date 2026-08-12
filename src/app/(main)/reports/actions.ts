@@ -1,8 +1,8 @@
 'use server'
 
 import { db } from '@/db'
-import { orders, expenses } from '@/db/schema'
-import { eq, and, gte, lte, sum } from 'drizzle-orm'
+import { orders, expenses, users } from '@/db/schema'
+import { eq, and, gte, lte, sum, lt, count } from 'drizzle-orm'
 import { requireOwner } from '@/lib/auth'
 
 export async function getFinancialReports(startDate: Date, endDate: Date) {
@@ -66,4 +66,31 @@ export async function getFinancialReports(startDate: Date, endDate: Date) {
     },
     chartData: Array.from(chartDataMap.values())
   }
+}
+
+export async function getStaffPerformance(month: number, year: number) {
+  await requireOwner()
+
+  const startDate = new Date(year, month - 1, 1)
+  const endDate = new Date(year, month, 1)
+
+  const staffPerformance = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      role: users.role,
+      order_count: count(orders.id),
+      total_revenue: sum(orders.total),
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.created_by, users.id))
+    .where(
+      and(
+        gte(orders.created_at, startDate),
+        lt(orders.created_at, endDate)
+      )
+    )
+    .groupBy(users.id, users.name, users.role)
+
+  return staffPerformance
 }

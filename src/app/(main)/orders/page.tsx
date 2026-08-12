@@ -51,7 +51,7 @@ export default async function OrdersPage() {
   const orders = await getOrders()
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">

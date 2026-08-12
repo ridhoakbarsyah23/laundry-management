@@ -19,7 +19,7 @@ export default async function ServicesPage() {
   const services = await getServices()
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Layanan</h1>

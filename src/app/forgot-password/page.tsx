@@ -1,73 +1,60 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { forgotPassword } from './actions'
+import { ForgotPasswordForm } from './ForgotPasswordForm'
 import Link from 'next/link'
-import { ArrowLeft, KeyRound } from 'lucide-react'
+import { ArrowLeft, Droplets, KeyRound } from 'lucide-react'
 
 export default async function ForgotPasswordPage({ searchParams }: { searchParams: Promise<{ error?: string, success?: string }> }) {
   const resolvedSearchParams = await searchParams
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-4 bg-[#f8f9fa] relative">
-      {/* Subtle Grid Background */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none" 
-        style={{
-          backgroundImage: 'linear-gradient(to right, #00000008 1px, transparent 1px), linear-gradient(to bottom, #00000008 1px, transparent 1px)',
-          backgroundSize: '40px 40px'
-        }}
-      ></div>
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white">
+      {/* Top Mobile Header */}
+      <div className="lg:hidden flex items-center p-6 border-b border-slate-100 bg-white z-20">
+        <div className="bg-blue-600 p-2 rounded-lg mr-3">
+          <Droplets className="w-5 h-5 text-white" />
+        </div>
+        <span className="text-xl font-extrabold tracking-tight text-slate-800">LaundryHub</span>
+      </div>
 
-      <Card className="w-full max-w-[420px] relative z-10 border border-slate-200/60 shadow-xl shadow-slate-200/50 rounded-2xl overflow-hidden bg-white flex flex-col">
-        <CardContent className="p-8 pb-6 flex-1">
-          <div className="mb-6 flex flex-col items-center text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+      {/* Left Branding Side */}
+      <div className="hidden lg:flex flex-1 flex-col justify-between bg-gradient-to-br from-blue-700 to-indigo-900 text-white p-12 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+        
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
+            <Droplets className="w-8 h-8 text-white" />
+          </div>
+          <span className="text-3xl font-extrabold tracking-tight">LaundryHub</span>
+        </div>
+
+        <div className="relative z-10 max-w-lg mt-auto mb-16">
+          <h1 className="text-5xl font-bold leading-tight mb-6">Tenang Saja,<br/>Kami Bantu<br/>Akses Anda.</h1>
+          <p className="text-blue-100 text-lg leading-relaxed mb-8">
+            Keamanan data Anda adalah prioritas kami. Masukkan email Anda dan ikuti instruksi yang kami kirimkan.
+          </p>
+        </div>
+      </div>
+
+      {/* Right Form Side */}
+      <div className="flex-1 flex flex-col justify-center items-center p-6 py-12 sm:p-12 relative">
+        <div className="w-full max-w-[400px]">
+          <Link href="/login" className="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors mb-8">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Kembali ke Halaman Login
+          </Link>
+
+          <div className="mb-8">
+            <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center mb-6">
               <KeyRound className="w-6 h-6 text-blue-600" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">Lupa Password?</h1>
-            <p className="text-slate-500 mt-2 text-sm">
+            <h2 className="text-3xl font-bold text-slate-900">Lupa Password?</h2>
+            <p className="text-slate-500 mt-2">
               Masukkan alamat email Anda yang terdaftar, dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi Anda.
             </p>
           </div>
 
-          <form action={forgotPassword} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-600 font-medium">Alamat Email</Label>
-              <Input 
-                id="email" 
-                name="email" 
-                type="email" 
-                placeholder="Masukkan alamat email Anda" 
-                required 
-                className="h-11 rounded-lg border-slate-200 focus-visible:ring-slate-300 text-slate-800 placeholder:text-slate-400"
-              />
-            </div>
-
-            {resolvedSearchParams?.error && (
-              <p className="text-sm font-medium text-red-500 text-center">{resolvedSearchParams.error}</p>
-            )}
-
-            {resolvedSearchParams?.success && (
-              <p className="text-sm font-medium text-emerald-600 text-center bg-emerald-50 p-3 rounded-lg border border-emerald-100">
-                {resolvedSearchParams.success}
-              </p>
-            )}
-
-            <Button type="submit" className="w-full h-11 rounded-lg bg-[#1a1b23] hover:bg-[#2a2b36] text-white font-medium shadow-md shadow-slate-900/10 transition-all mt-2">
-              Kirim Tautan Reset
-            </Button>
-          </form>
-        </CardContent>
-
-        <div className="bg-slate-50/80 p-4 border-t border-slate-100 flex items-center justify-center text-sm">
-          <Link href="/login" className="flex items-center text-slate-500 hover:text-slate-900 font-semibold transition-colors">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Kembali ke Login
-          </Link>
+          <ForgotPasswordForm error={resolvedSearchParams?.error} success={resolvedSearchParams?.success} />
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

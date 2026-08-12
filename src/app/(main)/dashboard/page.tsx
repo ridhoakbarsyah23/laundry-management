@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   const readyCount = readyOrders.length
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Dasbor</h1>
         <p className="text-slate-500 mt-2 text-lg">
@@ -49,7 +49,10 @@ export default async function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* Card 1 */}
-        <Card className="border-0 shadow-lg shadow-blue-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-blue-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '100ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Total Transaksi</CardTitle>
             <div className="p-2 bg-blue-100/50 rounded-lg">
@@ -63,7 +66,10 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Card 2 */}
-        <Card className="border-0 shadow-lg shadow-emerald-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-emerald-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '200ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Pendapatan</CardTitle>
             <div className="p-2 bg-emerald-100/50 rounded-lg">
@@ -83,7 +89,10 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Card 3 */}
-        <Card className="border-0 shadow-lg shadow-amber-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-amber-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '300ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Sedang Diproses</CardTitle>
             <div className="p-2 bg-amber-100/50 rounded-lg">
@@ -97,7 +106,10 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Card 4 */}
-        <Card className="border-0 shadow-lg shadow-purple-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-purple-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '400ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Siap Diambil</CardTitle>
             <div className="p-2 bg-purple-100/50 rounded-lg">

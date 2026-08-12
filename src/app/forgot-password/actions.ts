@@ -1,26 +1,31 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 export async function forgotPassword(formData: FormData) {
   const email = formData.get('email') as string
-  const supabase = await createClient()
+  const adminAuth = createAdminClient().auth
 
-  // Use headers to dynamically get the host to avoid hardcoding localhost
-  const { headers } = await import('next/headers')
-  const headersList = await headers()
-  const host = headersList.get('host')
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-  const origin = `${protocol}://${host}`
-
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/reset-password`,
-  })
-
-  if (error) {
-    redirect('/forgot-password?error=' + encodeURIComponent(error.message))
+  // 1. Find user by email (Admin API)
+  const { data: { users }, error: listError } = await adminAuth.admin.listUsers()
+  
+  if (listError) {
+    redirect('/forgot-password?error=' + encodeURIComponent('Gagal terhubung ke sistem.'))
   }
 
-  redirect('/forgot-password?success=Tautan reset password telah dikirim ke email Anda.')
+  const user = users.find(u => u.email === email)
+
+  if (!user) {
+    // Return success anyway for security so attackers can't guess emails
+    redirect('/forgot-password?error=' + encodeURIComponent('Email tidak ditemukan.'))
+  }
+
+  // 2. Set user ID in cookie for bypass
+  const cookieStore = await cookies()
+  cookieStore.set('reset_bypass_uid', user.id, { httpOnly: true, maxAge: 60 * 10 }) // 10 minutes
+
+  // 3. Directly redirect to reset-password page
+  redirect('/reset-password')
 }

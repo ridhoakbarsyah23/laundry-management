@@ -1,9 +1,9 @@
 export const dynamic = 'force-dynamic'
 
-import { getFinancialReports } from './actions'
+import { getFinancialReports, getStaffPerformance } from './actions'
 import { ReportChart } from './ReportChart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowDownRight, ArrowUpRight, Wallet, Receipt, TrendingUp } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, Wallet, Receipt, TrendingUp, Download, Users } from 'lucide-react'
 
 export default async function ReportsPage({
   searchParams
@@ -19,6 +19,10 @@ export default async function ReportsPage({
   startDate.setHours(0, 0, 0, 0)
 
   const { summary, chartData } = await getFinancialReports(startDate, endDate)
+  
+  const currentMonth = new Date().getMonth() + 1
+  const currentYear = new Date().getFullYear()
+  const staffPerformance = await getStaffPerformance(currentMonth, currentYear)
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -29,7 +33,7 @@ export default async function ReportsPage({
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
@@ -41,7 +45,25 @@ export default async function ReportsPage({
           <p className="text-slate-500 mt-2 text-lg">Analisis performa bisnis Anda dari waktu ke waktu.</p>
         </div>
         
-        {/* Simple Date Filter (can be expanded later) */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <a 
+            href={`/api/export/orders?month=${currentMonth}&year=${currentYear}`}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-xl transition-colors shadow-sm shadow-emerald-500/20"
+          >
+            <Download className="w-4 h-4" />
+            Pesanan (CSV)
+          </a>
+          <a 
+            href={`/api/export/expenses?month=${currentMonth}&year=${currentYear}`}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-medium rounded-xl transition-colors shadow-sm shadow-rose-500/20"
+          >
+            <Download className="w-4 h-4" />
+            Pengeluaran (CSV)
+          </a>
+        </div>
+      </div>
+      
+      <div className="flex justify-end">
         <div className="flex bg-white/80 backdrop-blur-md rounded-xl p-1 shadow-sm border border-slate-200/50">
           {[7, 30, 90].map((d) => (
             <a 
@@ -57,7 +79,10 @@ export default async function ReportsPage({
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Revenue */}
-        <Card className="border-0 shadow-lg shadow-emerald-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-emerald-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '100ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Total Pendapatan</CardTitle>
             <div className="p-2 bg-emerald-100/50 rounded-lg">
@@ -71,7 +96,10 @@ export default async function ReportsPage({
         </Card>
 
         {/* Expenses */}
-        <Card className="border-0 shadow-lg shadow-rose-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300">
+        <Card 
+          className="border-0 shadow-lg shadow-rose-500/10 bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+          style={{ animationDelay: '200ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Total Pengeluaran</CardTitle>
             <div className="p-2 bg-rose-100/50 rounded-lg">
@@ -85,7 +113,10 @@ export default async function ReportsPage({
         </Card>
 
         {/* Net Profit */}
-        <Card className={`border-0 shadow-lg bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 ${summary.netProfit >= 0 ? 'shadow-blue-500/10' : 'shadow-red-500/10'}`}>
+        <Card 
+          className={`border-0 shadow-lg bg-white/80 backdrop-blur hover:-translate-y-1 transition-transform duration-300 ${summary.netProfit >= 0 ? 'shadow-blue-500/10' : 'shadow-red-500/10'} animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards`}
+          style={{ animationDelay: '300ms' }}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-600">Laba Bersih</CardTitle>
             <div className={`p-2 rounded-lg ${summary.netProfit >= 0 ? 'bg-blue-100/50' : 'bg-red-100/50'}`}>
@@ -104,6 +135,45 @@ export default async function ReportsPage({
       <div className="border border-slate-200/60 rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl shadow-blue-500/5 p-6">
         <h2 className="text-xl font-semibold mb-6 text-slate-800">Tren Arus Kas</h2>
         <ReportChart data={chartData} />
+      </div>
+
+      <div className="border border-slate-200/60 rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl shadow-blue-500/5 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <Users className="w-6 h-6 text-indigo-600" />
+          <h2 className="text-xl font-semibold text-slate-800">Performa Karyawan (Bulan Ini)</h2>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y border-slate-200">
+              <tr>
+                <th className="px-6 py-4 font-medium">Nama Staf</th>
+                <th className="px-6 py-4 font-medium">Peran</th>
+                <th className="px-6 py-4 font-medium">Total Pesanan</th>
+                <th className="px-6 py-4 font-medium text-right">Total Pendapatan (Rp)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {staffPerformance.map((staff) => (
+                <tr key={staff.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-slate-800">{staff.name}</td>
+                  <td className="px-6 py-4 text-slate-500 uppercase text-xs">{staff.role}</td>
+                  <td className="px-6 py-4 text-slate-600">{staff.order_count} pesanan</td>
+                  <td className="px-6 py-4 font-semibold text-emerald-600 text-right">
+                    {formatCurrency(Number(staff.total_revenue) || 0)}
+                  </td>
+                </tr>
+              ))}
+              {staffPerformance.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                    Belum ada data pesanan bulan ini.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

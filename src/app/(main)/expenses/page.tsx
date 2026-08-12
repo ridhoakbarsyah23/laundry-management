@@ -18,7 +18,7 @@ export default async function ExpensesPage() {
   const expenses = await getExpenses()
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">Pengeluaran</h1>
         <p className="text-slate-500 mt-2 text-lg">Catat pengeluaran laundry harian Anda.</p>
