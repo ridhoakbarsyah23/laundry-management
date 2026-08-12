@@ -8,6 +8,13 @@
       "when": 1786361949950,
       "tag": "0000_damp_maestro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786541635874,
+      "tag": "0001_perpetual_spyke",
+      "breakpoints": true
     }
   ]
 }

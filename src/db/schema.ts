@@ -68,3 +68,23 @@ export const expenses = pgTable('expenses', {
   date: timestamp('date').defaultNow().notNull(),
   created_by: uuid('created_by').references(() => users.id).notNull(),
 });
+
+export const inventory = pgTable('inventory', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  item_name: text('item_name').notNull(),
+  stock: decimal('stock').notNull().default('0'),
+  unit: text('unit').notNull(), // 'Liter', 'Kg', 'Pcs', 'Pack'
+  min_stock: decimal('min_stock').notNull().default('0'), // Peringatan jika stok di bawah ini
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const inventoryLogs = pgTable('inventory_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  inventory_id: uuid('inventory_id').references(() => inventory.id).notNull(),
+  type: text('type').notNull(), // 'in' (masuk), 'out' (keluar/terpakai)
+  amount: decimal('amount').notNull(),
+  notes: text('notes'),
+  created_by: uuid('created_by').references(() => users.id).notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
